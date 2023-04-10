@@ -1,15 +1,34 @@
+import requests
 from question_model import Question
-from data import question_data
 from quiz_brain import QuizBrain
+
+QUIZ_URL = "https://opentdb.com/api.php"
+QUIZ_SETTINGS = {
+    "amount": 15,
+    "category": 17,
+    "type": "boolean"
+}
 
 question_bank = []
 
-for q in question_data:
-    question_bank.append(Question(q["question"], q["correct_answer"]))
 
-quiz = QuizBrain(question_bank)
+def populate_questions():
+    global question_bank
+    response = requests.get(url=QUIZ_URL, params=QUIZ_SETTINGS)
+    data = response.json()
+    for q in data["results"]:
+        question_bank.append(Question(q["question"], q["correct_answer"]))
 
-while quiz.still_has_questions():
-    quiz.next_question()
 
-quiz.end_game()
+def main():
+    populate_questions()
+
+    quiz = QuizBrain(question_bank)
+
+    while quiz.still_has_questions():
+        quiz.next_question()
+
+    quiz.end_game()
+
+
+main()
