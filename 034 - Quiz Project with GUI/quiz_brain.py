@@ -22,17 +22,21 @@ class QuizBrain:
     def get_score(self) -> int:
         return self.score
 
+    def get_current_question(self) -> str:
+        return self.question_list[self.question_number - 1]
+
     def get_next_question(self) -> str:
         curr = self.question_list[self.question_number]
         self.question_number += 1
         return html.unescape(curr.question)
 
-    def check_answer(self, user_answer, correct_answer) -> bool:
-        if user_answer.lower() == correct_answer.lower():
+    def check_answer(self, user_answer) -> bool:
+        correct_answer = self.get_current_question().answer
+        if user_answer == correct_answer:
             self.score += 1
             return True
         else:
             return False
 
     def end_game(self) -> str:
-        return "Your final score is: {self.score}/{self.question_number}"
+        return f"Your final score is: {self.score}/{self.question_number}"

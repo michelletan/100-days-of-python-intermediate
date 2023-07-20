@@ -18,7 +18,8 @@ def populate_questions():
     response = requests.get(url=QUIZ_URL, params=QUIZ_SETTINGS)
     data = response.json()
     for q in data["results"]:
-        question_bank.append(Question(q["question"], q["correct_answer"]))
+        question_bank.append(
+            Question(q["question"], q["correct_answer"] == "True"))
 
 
 def main():
@@ -26,11 +27,6 @@ def main():
 
     quiz = QuizBrain(question_bank)
     quiz_ui = QuizInterface(quiz)
-
-    # while quiz.still_has_questions():
-    #     quiz.next_question()
-
-    quiz.end_game()
 
 
 main()
