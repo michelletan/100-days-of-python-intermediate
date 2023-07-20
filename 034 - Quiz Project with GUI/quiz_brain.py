@@ -2,34 +2,37 @@ import html
 
 
 class QuizBrain:
+    """Contains question list and keeps track of score.
+    Returns next question and score when prompted.
+
+    Attributes:
+        - question_number: Current question index
+        - score: User's score in the game
+        - question_list: List of questions
+    """
+
     def __init__(self, question_list=[]) -> None:
         self.question_number = 0
         self.score = 0
         self.question_list = question_list
 
-    def still_has_questions(self):
+    def still_has_questions(self) -> bool:
         return self.question_number < len(self.question_list)
 
-    def next_question(self):
+    def get_score(self) -> int:
+        return self.score
+
+    def get_next_question(self) -> str:
         curr = self.question_list[self.question_number]
         self.question_number += 1
-        q_text = html.unescape(curr.question)
-        user_answer = input(
-            f"Q{self.question_number}. {q_text} (True/False): ")
-        self.check_answer(user_answer, curr.answer)
+        return html.unescape(curr.question)
 
-    def check_answer(self, user_answer, correct_answer):
+    def check_answer(self, user_answer, correct_answer) -> bool:
         if user_answer.lower() == correct_answer.lower():
-            print("You got it right!")
             self.score += 1
+            return True
         else:
-            print("That's wrong.")
-        print(f"The correct answer was: {correct_answer}")
-        print(
-            f"Your current score is: {self.score}/{self.question_number}")
-        print("\n")
+            return False
 
-    def end_game(self):
-        print("You've completed the quiz.")
-        print(
-            f"Your final score is: {self.score}/{self.question_number}")
+    def end_game(self) -> str:
+        return "Your final score is: {self.score}/{self.question_number}"
